@@ -5,7 +5,7 @@ let connection;
 const connect = async () => {
   if (connection) return;
 
-  const MONGO_URI = 'mongodb+srv://juancamiloclement:clement25-98@elementaldb.nkqfac9.mongodb.net/elemental';
+  const MONGO_URI = `${process.env.MONGO_DB_URI}`;
 
   connection = mongoose.connection;
 
@@ -14,7 +14,7 @@ const connect = async () => {
   });
 
   connection.on('disconnected', () => {
-    console.log('Disconnected form MongoDB');
+    console.log('Disconnected from MongoDB');
   });
 
   connection.on('error', (error) => {
