@@ -33,6 +33,16 @@ const getUserByUsername = async (username) => {
   }
 }
 
+const getUserByEmail = async (email) => {
+  try {
+    const user = await User.findOne({ email });
+
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 const createUser = async (data) => {
   try {
     const user = await User.create(data);
@@ -67,6 +77,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   getUserByUsername,
+  getUserByEmail,
   createUser,
   updateUser,
   deleteUser

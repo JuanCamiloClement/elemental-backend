@@ -1,3 +1,5 @@
+const { hashPassword } = require('../../utils/bcrypt.js');
+
 const {
   getAllUsers,
   getUserById,
@@ -30,14 +32,13 @@ const getUserByIdHandler = async (req, res) => {
 
 const createUserHandler = async (req, res) => {
   try {
-    const { firstName, lastName, userName, email, password } = req.body;
+    const body = req.body;
+
+    const hashedPassword = await hashPassword(body.password);
 
     const newUser = {
-      firstName,
-      lastName,
-      userName,
-      email,
-      password,
+      ...body,
+      password: hashedPassword,
     }
 
     const user = await createUser(newUser);

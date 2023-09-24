@@ -7,7 +7,9 @@ const {
   deleteUserHandler
 } = require('./user.controller.js');
 
-router.route('/').get(getAllUsersHandler);
+const { isAuthenticated } = require('../../middlewares/authentication.js');
+
+router.route('/').get(isAuthenticated, getAllUsersHandler);
 router.route('/:id').get(getUserByIdHandler);
 router.route('/').post(createUserHandler);
 router.route('/:id').put(updateUserHandler);

@@ -20,7 +20,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'User must have a username'],
       minlength: [5, 'Username must be at least 5 characters long'],
-      maxlength: [12, 'Username must be maximum 12 characters long'],
+      maxlength: [20, 'Username must be maximum 20 characters long'],
       validate: [{
         validator: async (value) => {
           try {
