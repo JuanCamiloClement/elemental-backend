@@ -4,6 +4,7 @@ const { welcomeEmail } = require('../../utils/emails.js');
 const {
   getAllUsers,
   getUserById,
+  getUserByUsername,
   createUser,
   updateUser,
   deleteUser
@@ -27,7 +28,19 @@ const getUserByIdHandler = async (req, res) => {
 
     res.status(200).json({ message: 'User found', user });
   } catch ({ message }) {
-    res.status(400).json({ message: 'Users could not be found', error: message });
+    res.status(400).json({ message: 'User could not be found', error: message });
+  }
+}
+
+const getUserByUsernameHandler = async (req, res) => {
+  try {
+    const { userName } = req.params;
+
+    const user = await getUserByUsername(userName);
+
+    res.status(200).json({ message: 'User found', user });
+  } catch ({ message }) {
+    res.status(400).json({ message: 'User could not be found', error: message });
   }
 }
 
@@ -90,6 +103,7 @@ const deleteUserHandler = async (req, res) => {
 module.exports = {
   getAllUsersHandler,
   getUserByIdHandler,
+  getUserByUsernameHandler,
   createUserHandler,
   updateUserHandler,
   deleteUserHandler

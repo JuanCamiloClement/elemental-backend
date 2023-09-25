@@ -25,7 +25,8 @@ const getUserById = async (id) => {
 
 const getUserByUsername = async (username) => {
   try {
-    const user = await User.findOne({ userName: username });
+    const user = await User.findOne({ userName: username })
+      .select('-_id -password');
 
     return user;
   } catch (error) {
