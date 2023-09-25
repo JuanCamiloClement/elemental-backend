@@ -1,5 +1,6 @@
-const { hashPassword } = require('../../utils/bcrypt.js');
-
+const { hashPassword, createValidationToken } = require('../../utils/bcrypt.js');
+const { sendMailWithSendgrid } = require('../../config/sendgrid.js');
+const { welcomeEmail } = require('../../utils/emails.js');
 const {
   getAllUsers,
   getUserById,
@@ -39,11 +40,15 @@ const createUserHandler = async (req, res) => {
     const newUser = {
       ...body,
       password: hashedPassword,
+      validateToken: createValidationToken(body.email),
+      tokenExpires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     }
 
     const user = await createUser(newUser);
 
-    res.status(201).json({ message: 'User created', user });
+    sendMailWithSendgrid(welcomeEmail(user));
+
+    res.status(201).json({ message: 'User created, must verify email' });
   } catch ({ message }) {
     res.status(400).json({ message: 'User could not be created', error: message });
   }

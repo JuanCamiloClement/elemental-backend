@@ -1,6 +1,10 @@
 const router = require('express').Router();
-const { loginHandler } = require('./local.controller.js');
+const {
+  loginHandler,
+  activateAccountHandler,
+} = require('./local.controller.js');
 
 router.route('/login').post(loginHandler);
+router.route('/activate-account/:token').get(activateAccountHandler);
 
 module.exports = router;

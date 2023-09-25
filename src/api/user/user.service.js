@@ -43,6 +43,16 @@ const getUserByEmail = async (email) => {
   }
 }
 
+const getUserByValidateToken = async (token) => {
+  try {
+    const user = await User.findOne({ validateToken: token });
+
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 const createUser = async (data) => {
   try {
     const user = await User.create(data);
@@ -78,6 +88,7 @@ module.exports = {
   getUserById,
   getUserByUsername,
   getUserByEmail,
+  getUserByValidateToken,
   createUser,
   updateUser,
   deleteUser
