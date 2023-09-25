@@ -26,7 +26,20 @@ const getUserById = async (id) => {
 const getUserByUsername = async (username) => {
   try {
     const user = await User.findOne({ userName: username })
-      .select('-_id -password');
+      .select('-password')
+      .populate({
+        path: 'posts likes comments followers follows',
+        select: 'user follower -_id',
+        populate: {
+          path: 'follower user',
+          strictPopulate: false,
+          select: 'firstName lastName userName -_id',
+          populate: {
+            path: 'posts',
+            select: 'url user likes comments createdAt -_id'
+          }
+        }
+      })
 
     return user;
   } catch (error) {
