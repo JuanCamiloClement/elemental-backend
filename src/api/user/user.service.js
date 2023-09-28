@@ -28,16 +28,21 @@ const getUserByUsername = async (username) => {
     const user = await User.findOne({ userName: username })
       .select('-password')
       .populate({
-        path: 'posts likes comments followers follows',
-        select: 'user follower -_id',
+        path: 'posts',
+        select: '-updatedAt',
         populate: {
-          path: 'follower user',
-          strictPopulate: false,
-          select: 'firstName lastName userName -_id',
-          populate: {
-            path: 'posts',
-            select: 'url user likes comments createdAt -_id'
-          }
+          path: 'user',
+          select: '-_id'
+        }
+      })
+      .populate('likes')
+      .populate('comments')
+      .populate('followers')
+      .populate({
+        path: 'follows',
+        populate: {
+          path: 'user',
+          populate: 'posts'
         }
       })
 

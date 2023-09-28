@@ -1,4 +1,5 @@
 const { getUserById } = require('../user/user.service.js');
+const { verifyToken } = require('../../utils/jwt.js');
 
 const {
   getPostById,
@@ -20,7 +21,9 @@ const getPostByIdHandler = async (req, res) => {
 const createPostHandler = async (req, res) => {
   try {
     const { url } = req.body;
-    const { id } = req.params;
+    const token = req.headers?.authorization?.split(" ")[1];
+
+    const { id } = verifyToken(token)
 
     const user = await getUserById(id);
 
