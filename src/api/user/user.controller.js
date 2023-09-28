@@ -1,6 +1,7 @@
 const { hashPassword, createValidationToken } = require('../../utils/bcrypt.js');
 const { sendMailWithSendgrid } = require('../../config/sendgrid.js');
 const { welcomeEmail } = require('../../utils/emails.js');
+const { verifyToken } = require('../../utils/jwt.js');
 const {
   getAllUsers,
   getUserById,
@@ -69,22 +70,68 @@ const createUserHandler = async (req, res) => {
 
 const updateUserHandler = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { firstName, lastName, userName, email, password } = req.body;
+    const body = req.body;
+    const token = req.headers?.authorization?.split(" ")[1];
 
-    const newUser = {
-      firstName,
-      lastName,
-      userName,
-      email,
-      password,
+    const decoded = verifyToken(token);
+
+    if (!decoded) {
+      return res.status(401).json({ message: 'Unauthorized' });
     }
 
-    const updatedUser = await updateUser(id, newUser);
+    const { id } = decoded;
+
+    const updatedUser = await updateUser(id, body);
 
     res.status(201).json({ message: 'User updated', user: updatedUser });
   } catch ({ message }) {
     res.status(401).json({ message: 'User could not be updated', error: message });
+  }
+}
+
+const updateAvatarHandler = async (req, res) => {
+  try {
+    const { avatar } = req.body;
+    const token = req.headers?.authorization?.split(" ")[1];
+
+    const decoded = verifyToken(token);
+
+    if (!decoded) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const { id } = decoded;
+
+    const data = {
+      avatar,
+    }
+
+    await updateUser(id, data);
+
+    res.status(201).json({ message: 'Avatar updated successfully' });
+  } catch ({ message }) {
+    res.status(401).json({ message: 'Avatar could not be updated', error: message });
+  }
+}
+
+const removeAvatarHandler = async (req, res) => {
+  try {
+    const body = req.body;
+    const token = req.headers?.authorization?.split(" ")[1];
+    console.log('TOKEN', token)
+    const decoded = verifyToken(token);
+
+    if (!decoded) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const { id } = decoded;
+
+    await updateUser(id, body);
+
+    res.status(201).json({ message: 'Avatar removed successfully' });
+  } catch ({ message }) {
+    res.status(401).json({ message: 'Avatar could not be removed', error: message });
   }
 }
 
@@ -106,5 +153,7 @@ module.exports = {
   getUserByUsernameHandler,
   createUserHandler,
   updateUserHandler,
+  updateAvatarHandler,
+  removeAvatarHandler,
   deleteUserHandler
 }
