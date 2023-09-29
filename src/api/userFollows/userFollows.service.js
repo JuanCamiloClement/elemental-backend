@@ -10,6 +10,17 @@ const createUserFollows = async (data) => {
   }
 }
 
+const deleteUserFollows = async (data) => {
+  try {
+    const deletedFollow = await UserFollows.findOneAndDelete(data);
+
+    return deletedFollow;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   createUserFollows,
+  deleteUserFollows,
 }

@@ -37,6 +37,8 @@ const loginHandler = async (req, res) => {
       lastName: user.lastName,
       userName: user.userName,
       email: user.email,
+      follows: user.follows,
+      followers: user.followers
     }
 
     res.status(201).json({ message: 'Login successful', token, profile });

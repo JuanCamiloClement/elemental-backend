@@ -40,8 +40,10 @@ const getUserByUsername = async (username) => {
       .populate('followers')
       .populate({
         path: 'follows',
+        select: '-_id',
         populate: {
           path: 'user',
+          select: 'firstName lastName userName -_id',
           populate: 'posts'
         }
       })
@@ -54,7 +56,23 @@ const getUserByUsername = async (username) => {
 
 const getUserByEmail = async (email) => {
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
+      .populate({
+        path: 'follows',
+        select: '-_id -follower -createdAt -updatedAt',
+        populate: {
+          path: 'user',
+          select: 'firstName lastName userName -_id'
+        }
+      })
+      .populate({
+        path: 'followers',
+        select: '-_id -user -createdAt -updatedAt',
+        populate: {
+          path: 'follower',
+          select: 'firstName lastName userName -_id'
+        }
+      });
 
     return user;
   } catch (error) {
