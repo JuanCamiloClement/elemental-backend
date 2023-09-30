@@ -35,7 +35,10 @@ const getUserByUsername = async (username) => {
           select: '-_id'
         }
       })
-      .populate('likes')
+      .populate({
+        path: 'likes',
+        select: 'post -_id'
+      })
       .populate('comments')
       .populate('followers')
       .populate({
@@ -72,6 +75,10 @@ const getUserByEmail = async (email) => {
           path: 'follower',
           select: 'firstName lastName userName -_id'
         }
+      })
+      .populate({
+        path: 'likes',
+        select: 'post -_id'
       });
 
     return user;

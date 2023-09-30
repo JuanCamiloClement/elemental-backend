@@ -10,6 +10,17 @@ const createLike = async (data) => {
   }
 }
 
+const deleteLike = async (data) => {
+  try {
+    const deletedLike = await Like.findOneAndDelete(data);
+
+    return deletedLike;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 module.exports = {
   createLike,
+  deleteLike,
 }

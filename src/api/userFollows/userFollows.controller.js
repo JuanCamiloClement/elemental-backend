@@ -65,7 +65,10 @@ const deleteUserFollowsHandler = async (req, res) => {
       follower: followerId,
     }
 
-    await deleteUserFollows(data);
+    const deletedUserFollows = await deleteUserFollows(data);
+    if (!deletedUserFollows) {
+      res.status(401).json({ message: 'Could not unfollow user because follow does not exist' });
+    }
 
     res.status(201).json({ message: 'User unfollowed successfully' });
   } catch ({ message }) {
