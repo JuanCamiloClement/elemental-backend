@@ -10,8 +10,6 @@ const createLikeHandler = async (req, res) => {
   try {
     const { postId } = req.body;
 
-    console.log('POST ID', postId)
-
     const token = req.headers?.authorization?.split(" ")[1];
     const decoded = verifyToken(token);
     if (!decoded) {
@@ -75,6 +73,11 @@ const deleteLikeHandler = async (req, res) => {
     if (!deletedLike) {
       return res.status(401).json({ message: 'Like could not be found' });
     }
+
+    user.likes.remove(deletedLike);
+    await user.save({ validateBeforeSave: false });
+    post.likes.remove(deletedLike);
+    await post.save({ validateBeforeSave: false });
 
     res.status(201).json({ message: 'Like deleted' });
   } catch ({ message }) {

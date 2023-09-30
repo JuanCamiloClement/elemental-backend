@@ -89,7 +89,27 @@ const getUserByEmail = async (email) => {
 
 const getUserByValidateToken = async (token) => {
   try {
-    const user = await User.findOne({ validateToken: token });
+    const user = await User.findOne({ validateToken: token })
+      .populate({
+        path: 'follows',
+        select: '-_id -follower -createdAt -updatedAt',
+        populate: {
+          path: 'user',
+          select: 'firstName lastName userName -_id'
+        }
+      })
+      .populate({
+        path: 'followers',
+        select: '-_id -user -createdAt -updatedAt',
+        populate: {
+          path: 'follower',
+          select: 'firstName lastName userName -_id'
+        }
+      })
+      .populate({
+        path: 'likes',
+        select: 'post -_id'
+      });
 
     return user;
   } catch (error) {

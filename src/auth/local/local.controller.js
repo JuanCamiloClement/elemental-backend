@@ -84,6 +84,9 @@ const activateAccountHandler = async (req, res) => {
       lastName: user.lastName,
       userName: user.userName,
       email: user.email,
+      follows: user.follows,
+      followers: user.followers,
+      likes: user.likes,
     }
 
     res.status(200).json({ message: 'Account activated successfully', token: userToken, profile });

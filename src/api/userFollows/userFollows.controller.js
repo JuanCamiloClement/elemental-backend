@@ -50,12 +50,14 @@ const deleteUserFollowsHandler = async (req, res) => {
   try {
     const { follower, followedUser } = req.query;
 
-    const { _id: followerId } = await getUserByUsername(follower);
+    const loggedUser = await getUserByUsername(follower);
+    const { _id: followerId } = loggedUser;
     if (!followerId) {
       return res.status(400).json({ message: 'Current follower could not be found' });
     }
 
-    const { _id: followedUserId } = await getUserByUsername(followedUser);
+    const userOfProfile = await getUserByUsername(followedUser);
+    const { _id: followedUserId } = userOfProfile;
     if (!followedUserId) {
       return res.status(400).json({ message: 'Currently followed user could not be found' });
     }
@@ -69,6 +71,11 @@ const deleteUserFollowsHandler = async (req, res) => {
     if (!deletedUserFollows) {
       res.status(401).json({ message: 'Could not unfollow user because follow does not exist' });
     }
+
+    loggedUser.follows.remove(deletedUserFollows);
+    await loggedUser.save({ validateBeforeSave: false });
+    userOfProfile.followers.remove(deletedUserFollows);
+    await userOfProfile.save({ validateBeforeSave: false });
 
     res.status(201).json({ message: 'User unfollowed successfully' });
   } catch ({ message }) {
