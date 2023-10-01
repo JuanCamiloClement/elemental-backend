@@ -5,7 +5,7 @@ const getPostById = async (id) => {
     const post = await Post.findById(id)
       .populate({
         path: 'comments',
-        select: 'content user createdAt -_id',
+        select: 'content user createdAt',
         populate: {
           path: 'user',
           select: 'userName -_id'

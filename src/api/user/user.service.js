@@ -129,6 +129,8 @@ const createUser = async (data) => {
 
 const updateUser = async (id, data) => {
   try {
+    console.log('ID IN SERVICE', id);
+    console.log('DATA IN SERVICE', data)
     const updatedUser = await User.findByIdAndUpdate(id, data, { new: true });
 
     return updatedUser;

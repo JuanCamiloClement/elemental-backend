@@ -81,7 +81,13 @@ const updateUserHandler = async (req, res) => {
 
     const { id } = decoded;
 
-    const updatedUser = await updateUser(id, body);
+    const data = {
+      firstName: body.firstName,
+      lastName: body.lastName,
+      bio: body.bio
+    }
+
+    const updatedUser = await updateUser(id, data);
 
     res.status(201).json({ message: 'User updated', user: updatedUser });
   } catch ({ message }) {
