@@ -2,7 +2,15 @@ const Post = require('./post.model.js');
 
 const getPostById = async (id) => {
   try {
-    const post = await Post.findById(id);
+    const post = await Post.findById(id)
+      .populate({
+        path: 'comments',
+        select: 'content user createdAt -_id',
+        populate: {
+          path: 'user',
+          select: 'userName -_id'
+        }
+      })
 
     return post;
   } catch (error) {
