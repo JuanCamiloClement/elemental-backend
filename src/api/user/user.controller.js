@@ -70,7 +70,7 @@ const createUserHandler = async (req, res) => {
 
 const updateUserHandler = async (req, res) => {
   try {
-    const body = req.body;
+    const { firstName, lastName, bio } = req.body;
     const token = req.headers?.authorization?.split(" ")[1];
 
     const decoded = verifyToken(token);
@@ -82,9 +82,9 @@ const updateUserHandler = async (req, res) => {
     const { id } = decoded;
 
     const data = {
-      firstName: body.firstName,
-      lastName: body.lastName,
-      bio: body.bio
+      firstName,
+      lastName,
+      bio,
     }
 
     const updatedUser = await updateUser(id, data);

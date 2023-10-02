@@ -3,7 +3,7 @@ const User = require('./user.model');
 const getAllUsers = async () => {
   try {
     const users = await User.find()
-      .select('firstName lastName userName email bio')
+      .select('firstName lastName userName email bio avatar')
       .populate({
         path: 'posts likes comments follows followers',
       });
